@@ -1,31 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(serial)
 
-# Find catkin
-find_package(catkin REQUIRED)
-
-if(APPLE)
-    find_library(IOKIT_LIBRARY IOKit)
-    find_library(FOUNDATION_LIBRARY Foundation)
-endif()
-
-if(UNIX AND NOT APPLE)
-    # If Linux, add rt and pthread
-    set(rt_LIBRARIES rt)
-    set(pthread_LIBRARIES pthread)
-    catkin_package(
-        LIBRARIES ${PROJECT_NAME}
-        INCLUDE_DIRS include
-        DEPENDS rt pthread
-    )
-else()
-    # Otherwise normal call
-    catkin_package(
-        LIBRARIES ${PROJECT_NAME}
-        INCLUDE_DIRS include
-    )
-endif()
-
 ## Sources
 set(serial_SRCS
     src/serial.cc
@@ -56,13 +31,8 @@ else()
     target_link_libraries(${PROJECT_NAME} setupapi)
 endif()
 
-## Uncomment for example
-add_executable(serial_example examples/serial_example.cc)
-add_dependencies(serial_example ${PROJECT_NAME})
-target_link_libraries(serial_example ${PROJECT_NAME})
-
 ## Include headers
-include_directories(include)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 ## Install executable
 install(TARGETS ${PROJECT_NAME}
